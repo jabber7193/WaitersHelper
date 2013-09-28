@@ -105,8 +105,28 @@ public class MoneyDB {
 	}// end method insertDB
 
 	// updateDB: Method for editing previous entries to database.
-	public void updateDB() {
+	public static void updateDB(int x, float m, float d) {
 		// TODO: create method
+		Connection c = null;
+		Statement stmt = null;
+		try {
+			Class.forName("org.sqlite.JDBC");
+			c = DriverManager.getConnection("jdbc:sqlite:test.db");
+			c.setAutoCommit(false);
+			System.out.println("Opened database successfully");
+			
+			stmt = c.createStatement();
+			String sql = ( "UPDATE ACCOUNT set AMTMADE = " + m + " WHERE ID=" + x + ";" );
+			String sql2 = ( "UPDATE ACCOUNT set AMTDEP = " + d + " WHERE ID=" + x + ";" );
+			stmt.executeUpdate(sql);
+			stmt.executeUpdate(sql2);
+			System.out.println("Data inserted.");
+			stmt.close();
+			c.commit();
+			c.close();
+		} catch (Exception e) {
+			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+		}
 	}// end method updateDB
 
 	// sumColDB: Method to sum a given column. Returns the total. Consider

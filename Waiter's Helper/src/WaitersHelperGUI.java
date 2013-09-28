@@ -59,6 +59,18 @@ public class WaitersHelperGUI extends ApplicationWindow {
 		}
 		{
 			Button editBtn = new Button(container, SWT.NONE);
+			editBtn.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+						try {
+							EditWindow window = new EditWindow();
+							window.open();
+						} catch (Exception x) {
+							x.printStackTrace();
+						}
+						refresh();
+					}
+			});
 			editBtn.setBounds(10, 223, 150, 25);
 			editBtn.setText("&Edit");
 		}
@@ -95,21 +107,18 @@ public class WaitersHelperGUI extends ApplicationWindow {
 					
 						MoneyDB.insertDB(dep, made);
 					}
-					//MoneyDB.insertDB(dep, made);
-					amtMadeTB.setText("");
+					
+					amtMadeTB.setText("");//reset user entry to null
 					amtDepTB.setText("");
 					
 					amtMadeTB.setFocus();
 					
-					totMadeTB.setText(Float.toString(MoneyDB.sumColDB("AMTMADE")));
-					totDepTB.setText(Float.toString(MoneyDB.sumColDB("AMTDEP")));
+					refresh();
 					
-					list.removeAll();
-					MoneyDB.printDB();
 				}
 				
 			});
-			parent.getShell().setDefaultButton(updateBtn);
+			parent.getShell().setDefaultButton(updateBtn);//set Update button as default
 			updateBtn.setBounds(10, 183, 150, 25);
 			updateBtn.setText("&Update");
 		}
@@ -224,6 +233,13 @@ public class WaitersHelperGUI extends ApplicationWindow {
 	}
 	
 	public static void populate(int id, String date, float amtmade, float amtdep ){
-		list.add(id + "   " + date + "   " + amtmade + "   " + amtdep + "/n");
+		list.add(id + "   " + date + "   " + amtmade + "   " + amtdep );
+	}
+	private void refresh() {
+		totMadeTB.setText(Float.toString(MoneyDB.sumColDB("AMTMADE")));//refresh totals
+		totDepTB.setText(Float.toString(MoneyDB.sumColDB("AMTDEP")));
+		
+		list.removeAll();//refresh list
+		MoneyDB.printDB();
 	}
 }
