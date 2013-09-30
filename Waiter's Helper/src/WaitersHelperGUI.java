@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
-
 public class WaitersHelperGUI extends ApplicationWindow {
 	private Text amtMadeTB;
 	private Text amtDepTB;
@@ -38,6 +37,7 @@ public class WaitersHelperGUI extends ApplicationWindow {
 
 	/**
 	 * Create contents of the application window.
+	 * 
 	 * @param parent
 	 */
 	@Override
@@ -45,7 +45,8 @@ public class WaitersHelperGUI extends ApplicationWindow {
 		final Composite container = new Composite(parent, SWT.NONE);
 		{
 			Label amtMadeLbl = new Label(container, SWT.NONE);
-			amtMadeLbl.setFont(SWTResourceManager.getFont("Segoe UI Semibold", 12, SWT.NORMAL));
+			amtMadeLbl.setFont(SWTResourceManager.getFont("Segoe UI Semibold",
+					12, SWT.NORMAL));
 			amtMadeLbl.setBounds(10, 10, 124, 25);
 			amtMadeLbl.setText("Amount Made:");
 		}
@@ -62,14 +63,14 @@ public class WaitersHelperGUI extends ApplicationWindow {
 			editBtn.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-						try {
-							EditWindow window = new EditWindow();
-							window.open();
-						} catch (Exception x) {
-							x.printStackTrace();
-						}
-						refresh();
+					try {
+						EditWindow window = new EditWindow();
+						window.open();
+					} catch (Exception x) {
+						x.printStackTrace();
 					}
+					refresh();
+				}
 			});
 			editBtn.setBounds(10, 223, 150, 25);
 			editBtn.setText("&Edit");
@@ -95,43 +96,48 @@ public class WaitersHelperGUI extends ApplicationWindow {
 			updateBtn.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					if (amtMadeTB.getText().equals("") | amtDepTB.getText().equals("")){
-						MessageDialog.openError(new Shell(), "No Data Entered!", "Please enter data into BOTH fields!");
-						
+					if (amtMadeTB.getText().equals("")
+							| amtDepTB.getText().equals("")) {
+						MessageDialog.openError(new Shell(),
+								"No Data Entered!",
+								"Please enter data into BOTH fields!");
+
 					} else {
-					String tempMade = amtMadeTB.getText();
-					String tempDep = amtDepTB.getText();
-					
-					float made = Float.parseFloat(tempMade);
-					float dep = Float.parseFloat(tempDep);
-					
+						String tempMade = amtMadeTB.getText();
+						String tempDep = amtDepTB.getText();
+
+						float made = Float.parseFloat(tempMade);
+						float dep = Float.parseFloat(tempDep);
+
 						MoneyDB.insertDB(dep, made);
 					}
-					
-					amtMadeTB.setText("");//reset user entry to null
+
+					amtMadeTB.setText("");// reset user entry to null
 					amtDepTB.setText("");
-					
+
 					amtMadeTB.setFocus();
-					
+
 					refresh();
-					
+
 				}
-				
+
 			});
-			parent.getShell().setDefaultButton(updateBtn);//set Update button as default
+			parent.getShell().setDefaultButton(updateBtn);// set Update button
+															// as default
 			updateBtn.setBounds(10, 183, 150, 25);
 			updateBtn.setText("&Update");
 		}
-		
+
 		Label amtDepLbl = new Label(container, SWT.NONE);
-		amtDepLbl.setFont(SWTResourceManager.getFont("Segoe UI Semibold", 12, SWT.NORMAL));
+		amtDepLbl.setFont(SWTResourceManager.getFont("Segoe UI Semibold", 12,
+				SWT.NORMAL));
 		amtDepLbl.setBounds(10, 97, 156, 25);
 		amtDepLbl.setText("Amount Deposited:");
-		
+
 		Label totDepLbl = new Label(container, SWT.NONE);
 		totDepLbl.setBounds(193, 102, 150, 15);
 		totDepLbl.setText("Total Amount Deposited:");
-		
+
 		Label totMadeLbl = new Label(container, SWT.NONE);
 		totMadeLbl.setBounds(193, 15, 130, 15);
 		totMadeLbl.setText("Total Amount Made:");
@@ -151,9 +157,8 @@ public class WaitersHelperGUI extends ApplicationWindow {
 			list = new List(container, SWT.BORDER | SWT.V_SCROLL);
 			list.setBounds(341, 10, 273, 349);
 			MoneyDB.printDB();
-			
+
 		}
-		
 
 		return container;
 	}
@@ -167,6 +172,7 @@ public class WaitersHelperGUI extends ApplicationWindow {
 
 	/**
 	 * Create the menu manager.
+	 * 
 	 * @return the menu manager
 	 */
 	@Override
@@ -177,6 +183,7 @@ public class WaitersHelperGUI extends ApplicationWindow {
 
 	/**
 	 * Create the toolbar manager.
+	 * 
 	 * @return the toolbar manager
 	 */
 	@Override
@@ -187,6 +194,7 @@ public class WaitersHelperGUI extends ApplicationWindow {
 
 	/**
 	 * Create the status line manager.
+	 * 
 	 * @return the status line manager
 	 */
 	@Override
@@ -197,13 +205,13 @@ public class WaitersHelperGUI extends ApplicationWindow {
 
 	/**
 	 * Launch the application.
+	 * 
 	 * @param args
 	 */
 	public static void main(String args[]) {
-		
-		MoneyDB data = new MoneyDB();
-		data.newTable();
-		
+
+		new MoneyDB();
+
 		try {
 			WaitersHelperGUI window = new WaitersHelperGUI();
 			window.setBlockOnOpen(true);
@@ -216,6 +224,7 @@ public class WaitersHelperGUI extends ApplicationWindow {
 
 	/**
 	 * Configure the shell.
+	 * 
 	 * @param newShell
 	 */
 	@Override
@@ -231,15 +240,22 @@ public class WaitersHelperGUI extends ApplicationWindow {
 	protected Point getInitialSize() {
 		return new Point(640, 480);
 	}
-	
-	public static void populate(int id, String date, float amtmade, float amtdep ){
-		list.add(id + "   " + date + "   " + amtmade + "   " + amtdep );
-	}
-	private void refresh() {
-		totMadeTB.setText(Float.toString(MoneyDB.sumColDB("AMTMADE")));//refresh totals
+
+	public static void populate(int id, String date, float amtmade, float amtdep) {// adds
+																					// DB
+																					// items
+																					// to
+																					// a
+																					// list
+		list.add(id + "   " + date + "   " + amtmade + "   " + amtdep);
+	}// end poulate method
+
+	private void refresh() {// refreshes GUI list and totals
+		totMadeTB.setText(Float.toString(MoneyDB.sumColDB("AMTMADE")));// refresh
+																		// totals
 		totDepTB.setText(Float.toString(MoneyDB.sumColDB("AMTDEP")));
-		
-		list.removeAll();//refresh list
+
+		list.removeAll();// refresh list
 		MoneyDB.printDB();
-	}
+	}// end refresh
 }

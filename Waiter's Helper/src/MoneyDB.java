@@ -7,7 +7,7 @@ public class MoneyDB {
 	}// end default constructor
 
 	MoneyDB(String dbName) {// Create database with passed name if it doesn't
-							// exist
+							// exist, creates table ACCOUNT
 
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -16,13 +16,15 @@ public class MoneyDB {
 			// database
 			System.out.println("Database Opened Successfully...");
 			c.close();
+			newTable();
 		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-			System.exit(0);
+			// System.err.println(e.getClass().getName() + ": " +
+			// e.getMessage());
+			// System.exit(0);
 		}
 	}// end constructor
 
-	public void newTable() { // Creates AMOUNT table in DB if it doesn't exist
+	private void newTable() { // Creates AMOUNT table in DB if it doesn't exist
 		Connection c = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -30,7 +32,8 @@ public class MoneyDB {
 			Statement stmt = c.createStatement();
 			String sql = "CREATE TABLE ACCOUNT"
 					+ "(ID INTEGER PRIMARY KEY	NOT NULL,"
-					+ " DATE			 STRING		NOT NULL," + " AMTDEP		 FLOAT		NOT NULL,"
+					+ " DATE			 STRING		NOT NULL,"
+					+ " AMTDEP		 FLOAT		NOT NULL,"
 					+ " AMTMADE		 FLOAT		NOT NULL)";
 			stmt.executeUpdate(sql);
 			System.out.println("Table created!");
@@ -42,8 +45,8 @@ public class MoneyDB {
 		}
 	}// end method newTable
 
-	public static void printDB() { // method to print out each record of DB. NEEDS
-							// FORMATING
+	public static void printDB() { // method to print out each record of DB.
+									// NEEDS FORMATING
 		Connection c = null;
 		Statement stmt = null;
 		try {
@@ -59,21 +62,17 @@ public class MoneyDB {
 				String date = rs.getString("date");
 				float amtdep = rs.getFloat("amtdep");
 				float amtmade = rs.getFloat("amtmade");
-				
+
 				WaitersHelperGUI.populate(id, date, amtmade, amtdep);
-				
-				//System.out.println("ID = " + id); 
-				//System.out.println("DATE = " + date);
-				//System.out.println("AMTDEP = " + amtdep);
-				//System.out.println("AMTMADE = " + amtmade);
-				//System.out.println();
+
 			}
 			rs.close();
 			stmt.close();
 			c.close();
 		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
-			System.exit(0);
+			// System.err.println(e.getClass().getName() + ": " +
+			// e.getMessage());
+			// System.exit(0);
 		}
 	}// end method printDB
 
@@ -98,7 +97,8 @@ public class MoneyDB {
 			c.commit();
 			c.close();
 		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			// System.err.println(e.getClass().getName() + ": " +
+			// e.getMessage());
 			// System.exit(0);
 		}
 		System.out.println("Records created successfully");
@@ -114,10 +114,12 @@ public class MoneyDB {
 			c = DriverManager.getConnection("jdbc:sqlite:test.db");
 			c.setAutoCommit(false);
 			System.out.println("Opened database successfully");
-			
+
 			stmt = c.createStatement();
-			String sql = ( "UPDATE ACCOUNT set AMTMADE = " + m + " WHERE ID=" + x + ";" );
-			String sql2 = ( "UPDATE ACCOUNT set AMTDEP = " + d + " WHERE ID=" + x + ";" );
+			String sql = ("UPDATE ACCOUNT set AMTMADE = " + m + " WHERE ID="
+					+ x + ";");
+			String sql2 = ("UPDATE ACCOUNT set AMTDEP = " + d + " WHERE ID="
+					+ x + ";");
 			stmt.executeUpdate(sql);
 			stmt.executeUpdate(sql2);
 			System.out.println("Data inserted.");
@@ -125,7 +127,8 @@ public class MoneyDB {
 			c.commit();
 			c.close();
 		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			// System.err.println(e.getClass().getName() + ": " +
+			// e.getMessage());
 		}
 	}// end method updateDB
 
@@ -134,7 +137,7 @@ public class MoneyDB {
 	public static float sumColDB(String colName) {
 		float total = 0;
 		ResultSet rs;
-		
+
 		Connection c = null;
 		Statement stmt = null;
 		try {
@@ -144,17 +147,18 @@ public class MoneyDB {
 			System.out.println("Opened database successfully");
 
 			stmt = c.createStatement();
-			rs = stmt.executeQuery( "SELECT SUM(" + colName + ") FROM ACCOUNT");
+			rs = stmt.executeQuery("SELECT SUM(" + colName + ") FROM ACCOUNT");
 			total = rs.getFloat(1);
+			rs.close();
 			stmt.close();
 			c.commit();
 			c.close();
 		} catch (Exception e) {
-			System.err.println(e.getClass().getName() + ": " + e.getMessage());
+			// System.err.println(e.getClass().getName() + ": " +
+			// e.getMessage());
 			// System.exit(0);
 		}
-		//System.out.println(total);
-			
+
 		return total;
 	}// end method sumColDB
 
