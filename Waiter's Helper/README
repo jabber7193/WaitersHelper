@@ -1,3 +1,1 @@
-Program to keep track of money made from a cash job; i.e. a waiter who gets cash every shift. This is a requested
- project, so it will also keep track of how much of the money was deposited into an account. The program uses
- an SQLite database, and an SWT UI.
+Program to keep track of money made from a cash job; i.e. a waiter who gets cash every shift. This is a requested project, so it will also keep track of how much of the money was deposited into an account. The program uses an SQLite database, and an SWT UI.
