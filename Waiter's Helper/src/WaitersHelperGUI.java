@@ -154,7 +154,7 @@ public class WaitersHelperGUI extends ApplicationWindow {
 						    " cannot be more than amount made, or amount cannot be less than 0.");
 						} else {
                             MoneyDB.insertDB(dep, made);
-                            clearForm();
+                            //clearForm();
 						}
 					}
 
@@ -304,8 +304,8 @@ public class WaitersHelperGUI extends ApplicationWindow {
 		MoneyDB.printDB();
 	}// end refresh
 	
-	private void clearForm(){//Not Working ATM
-		amtMadeTB.setText("");
-		amtDepTB.setText("");
-	}
+	//private void clearForm(){//Not Working ATM
+		//amtMadeTB.setText("");
+		//amtDepTB.setText("");
+	//}
 }
