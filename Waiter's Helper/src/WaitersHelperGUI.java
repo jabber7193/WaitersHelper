@@ -304,7 +304,7 @@ public class WaitersHelperGUI extends ApplicationWindow {
 		MoneyDB.printDB();
 	}// end refresh
 	
-	private void clearForm(){
+	private void clearForm(){//Not Working ATM
 		amtMadeTB.setText("");
 		amtDepTB.setText("");
 	}
