@@ -1,3 +1,6 @@
+//WaiterselperGUI.java created by Alonzo Couture
+//Text field verification code thanks to Bhavesh Sanghvi http://openbiomind-gui.blogspot.com/2008/07/creating-numonly-text-field-using.html
+
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.StatusLineManager;
 import org.eclipse.jface.action.ToolBarManager;
@@ -14,8 +17,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.*;
 
 public class WaitersHelperGUI extends ApplicationWindow {
 	private Text amtMadeTB;
@@ -53,10 +55,48 @@ public class WaitersHelperGUI extends ApplicationWindow {
 		{
 			amtMadeTB = new Text(container, SWT.BORDER);
 			amtMadeTB.setBounds(10, 41, 156, 25);
+			amtMadeTB.addVerifyListener(new VerifyListener() { //Allow only digits as input into text box  				  
+			    @Override  
+			    public void verifyText(final VerifyEvent event) {  
+			        switch (event.keyCode) {  
+			            case SWT.BS:           // Backspace  
+			            case SWT.DEL:          // Delete  
+			            case SWT.HOME:         // Home  
+			            case SWT.END:          // End  
+			            case SWT.ARROW_LEFT:   // Left arrow  
+			            case SWT.ARROW_RIGHT:  // Right arrow  
+			                return;  
+			        }  
+			  
+			        if (!Character.isDigit(event.character)) {  
+			            event.doit = false;  // disallow the action  
+			        }  
+			    }  
+			  
+			}); 
 		}
 		{
 			amtDepTB = new Text(container, SWT.BORDER);
 			amtDepTB.setBounds(10, 128, 156, 25);
+			amtDepTB.addVerifyListener(new VerifyListener() {  //Allow only digits as input into text box				  
+			    @Override  
+			    public void verifyText(final VerifyEvent event) {  
+			        switch (event.keyCode) {  
+			            case SWT.BS:           // Backspace  
+			            case SWT.DEL:          // Delete  
+			            case SWT.HOME:         // Home  
+			            case SWT.END:          // End  
+			            case SWT.ARROW_LEFT:   // Left arrow  
+			            case SWT.ARROW_RIGHT:  // Right arrow  
+			                return;  
+			        }  
+			  
+			        if (!Character.isDigit(event.character)) {  
+			            event.doit = false;  // disallow the action  
+			        }  
+			    }  
+			  
+			}); 
 		}
 		{
 			Button editBtn = new Button(container, SWT.NONE);
@@ -95,7 +135,7 @@ public class WaitersHelperGUI extends ApplicationWindow {
 			Button updateBtn = new Button(container, SWT.PUSH);
 			updateBtn.addSelectionListener(new SelectionAdapter() {
 				@Override
-				public void widgetSelected(SelectionEvent e) {
+				public void widgetSelected(SelectionEvent e) {  //disallows null entries
 					if (amtMadeTB.getText().equals("")
 							| amtDepTB.getText().equals("")) {
 						MessageDialog.openError(new Shell(),
@@ -103,17 +143,20 @@ public class WaitersHelperGUI extends ApplicationWindow {
 								"Please enter data into BOTH fields!");
 
 					} else {
-						String tempMade = amtMadeTB.getText();
+						String tempMade = amtMadeTB.getText();//get user entries
 						String tempDep = amtDepTB.getText();
 
 						float made = Float.parseFloat(tempMade);
 						float dep = Float.parseFloat(tempDep);
-
-						MoneyDB.insertDB(dep, made);
+						
+						if( made < dep | made < 0 | dep < 0) { //check for negative
+							MessageDialog.openError(new Shell(), "Error!", "Please re-check entries for accuracy. Amount deposited" + 
+						    " cannot be more than amount made, or amount cannot be less than 0.");
+						} else {
+                            MoneyDB.insertDB(dep, made);
+                            //clearForm();
+						}
 					}
-
-					amtMadeTB.setText("");// reset user entry to null
-					amtDepTB.setText("");
 
 					amtMadeTB.setFocus();
 
@@ -251,6 +294,8 @@ public class WaitersHelperGUI extends ApplicationWindow {
 	}// end poulate method
 
 	private void refresh() {// refreshes GUI list and totals
+		
+		
 		totMadeTB.setText(Float.toString(MoneyDB.sumColDB("AMTMADE")));// refresh
 																		// totals
 		totDepTB.setText(Float.toString(MoneyDB.sumColDB("AMTDEP")));
@@ -258,4 +303,9 @@ public class WaitersHelperGUI extends ApplicationWindow {
 		list.removeAll();// refresh list
 		MoneyDB.printDB();
 	}// end refresh
+	
+	//private void clearForm(){//Not Working ATM
+		//amtMadeTB.setText("");
+		//amtDepTB.setText("");
+	//}
 }
